@@ -1,4 +1,5 @@
 from flask import Flask, render_template
+import os
 from flask_socketio import SocketIO, join_room, leave_room, emit
 import re
 
@@ -7,10 +8,8 @@ app.config["SECRET_KEY"] = "bca1_batch_secret"
 
 socketio = SocketIO(
     app,
-    cors_allowed_origins="*",
-    async_mode="threading"
+    cors_allowed_origins="*"
 )
-
 # =========================================================
 # ROOM SETTINGS
 # =========================================================
@@ -389,24 +388,15 @@ def handle_disconnect():
 # =========================================================
 
 if __name__ == "__main__":
-
     print()
     print("========================================")
     print("       BCA 1st Batch Chatroom")
     print("========================================")
     print()
-    print("Server:")
-    print("http://127.0.0.1:5000")
-    print()
-    print("Room password:")
-    print(ROOM_PASSWORD)
-    print()
-    print("========================================")
-
 
     socketio.run(
         app,
         host="0.0.0.0",
-        port=5000,
-        debug=True
+        port=int(os.environ.get("PORT", 5000)),
+        debug=False
     )
