@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>{{ room_name }}</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+
+<div class="chat-container">
+
+
+    <!-- HEADER -->
+
+    <header class="chat-header">
+
+
+        <div class="header-left">
+
+            <div class="header-icon">
+                💬
+            </div>
+
+
+            <div>
+
+                <h2>
+                    {{ room_name }}
+                </h2>
+
+                <span>
+                    Private Chat
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <button
+            id="leaveButton"
+            class="leave-button"
+        >
+            Leave
+        </button>
+
+
+    </header>
+
+
+    <!-- MESSAGES -->
+
+    <main
+        id="messages"
+        class="messages"
+    >
+    </main>
+
+
+    <!-- TYPING -->
+
+    <div
+        id="typingIndicator"
+        class="typing-indicator"
+    >
+    </div>
+
+
+    <!-- INPUT -->
+
+    <div class="message-area">
+
+
+        <button
+            id="imageButton"
+            class="image-button"
+            title="Send image"
+        >
+            📷
+        </button>
+
+
+        <input
+            type="text"
+            id="messageInput"
+            placeholder="Type a message..."
+            maxlength="2000"
+            autocomplete="off"
+        >
+
+
+        <button
+            id="sendButton"
+            class="send-button"
+        >
+            ➤
+        </button>
+
+
+    </div>
+
+
+</div>
+
+
+<script
+    src="https://cdn.socket.io/4.8.1/socket.io.min.js"
+></script>
+
+
+<script
+    src="{{ url_for('static', filename='script.js') }}"
+></script>
+
+
+</body>
+
+</html>
