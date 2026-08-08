@@ -8,7 +8,8 @@ app.config["SECRET_KEY"] = "bca1_batch_secret"
 
 socketio = SocketIO(
     app,
-    cors_allowed_origins="*"
+    cors_allowed_origins="*",
+    async_mode="threading"
 )
 # =========================================================
 # ROOM SETTINGS
