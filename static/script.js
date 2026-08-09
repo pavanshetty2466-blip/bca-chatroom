@@ -1,12 +1,14 @@
 const socket = io();
 
-
 // =====================================================
 // GET LOGIN INFORMATION
 // =====================================================
 
-const username = sessionStorage.getItem("username");
-const roomPassword = sessionStorage.getItem("roomPassword");
+const username =
+    sessionStorage.getItem("username");
+
+const roomPassword =
+    sessionStorage.getItem("roomPassword");
 
 
 // =====================================================
@@ -48,16 +50,14 @@ socket.on("connect", function () {
 
     console.log("Connected to server");
 
-    // IMPORTANT:
-    // The new socket connection must join the room again.
 
-    socket.emit("join_room", {
-
-        username: username,
-
-        password: roomPassword
-
-    });
+    socket.emit(
+        "join_room",
+        {
+            username: username,
+            password: roomPassword
+        }
+    );
 
 });
 
@@ -66,41 +66,136 @@ socket.on("connect", function () {
 // JOIN SUCCESS
 // =====================================================
 
-socket.on("join_success", function (data) {
+socket.on(
+    "join_success",
+    function (data) {
 
-    console.log("Successfully joined chatroom");
+        console.log(
+            "Successfully joined chatroom"
+        );
 
-});
+    }
+);
 
 
 // =====================================================
 // JOIN ERROR
 // =====================================================
 
-socket.on("join_error", function (data) {
+socket.on(
+    "join_error",
+    function (data) {
 
-    alert(data.message);
+        alert(data.message);
 
-    sessionStorage.removeItem("username");
-    sessionStorage.removeItem("roomPassword");
 
-    window.location.href = "/";
+        sessionStorage.removeItem(
+            "username"
+        );
 
-});
+        sessionStorage.removeItem(
+            "roomPassword"
+        );
+
+
+        window.location.href = "/";
+
+    }
+);
 
 
 // =====================================================
-// RECEIVE MESSAGE
+// MESSAGE HISTORY
 // =====================================================
 
-socket.on("new_message", function (data) {
+socket.on(
+    "message_history",
+    function (data) {
 
-    addMessage(
-        data.username,
-        data.message
+        console.log(
+            "Previous messages:",
+            data.messages.length
+        );
+
+
+        // Clear the current message area
+        // before loading history.
+
+        messages.innerHTML = "";
+
+
+        data.messages.forEach(
+            function (item) {
+
+                addMessage(
+                    item.username,
+                    item.message
+                );
+
+            }
+        );
+
+
+        scrollToBottom();
+
+    }
+);
+
+
+// =====================================================
+// RECEIVE NEW MESSAGE
+// =====================================================
+
+socket.on(
+    "new_message",
+    function (data) {
+
+        addMessage(
+            data.username,
+            data.message
+        );
+
+    }
+);
+// =====================================================
+// LOAD PREVIOUS MESSAGES
+// =====================================================
+
+socket.on("message_history", function (data) {
+
+    console.log(
+        "Loading previous messages:",
+        data.messages.length
     );
 
+    messages.innerHTML = "";
+
+    data.messages.forEach(function (item) {
+
+        addMessage(
+            item.username,
+            item.message
+        );
+
+    });
+
+    scrollToBottom();
+
 });
+
+
+// =====================================================
+// MESSAGE ERROR
+// =====================================================
+
+socket.on(
+    "message_error",
+    function (data) {
+
+        alert(data.message);
+
+    }
+);
 
 
 // =====================================================
@@ -112,6 +207,7 @@ function addMessage(sender, text) {
     const wrapper =
         document.createElement("div");
 
+
     wrapper.classList.add(
         "message-wrapper"
     );
@@ -120,12 +216,15 @@ function addMessage(sender, text) {
     const message =
         document.createElement("div");
 
+
     message.classList.add(
         "message"
     );
 
 
+    // -----------------------------------------
     // YOUR MESSAGE
+    // -----------------------------------------
 
     if (sender === username) {
 
@@ -135,7 +234,10 @@ function addMessage(sender, text) {
 
     }
 
+
+    // -----------------------------------------
     // OTHER USER
+    // -----------------------------------------
 
     else {
 
@@ -146,43 +248,58 @@ function addMessage(sender, text) {
     }
 
 
+    // -----------------------------------------
     // USERNAME
+    // -----------------------------------------
 
     const senderName =
         document.createElement("div");
+
 
     senderName.classList.add(
         "sender-name"
     );
 
+
     senderName.textContent =
         sender;
 
 
+    // -----------------------------------------
     // MESSAGE TEXT
+    // -----------------------------------------
 
     const messageText =
         document.createElement("div");
+
 
     messageText.classList.add(
         "message-text"
     );
 
+
     messageText.textContent =
         text;
 
+
+    // -----------------------------------------
+    // BUILD MESSAGE
+    // -----------------------------------------
 
     message.appendChild(
         senderName
     );
 
+
     message.appendChild(
         messageText
     );
 
+
     wrapper.appendChild(
         message
     );
+
 
     messages.appendChild(
         wrapper
@@ -220,7 +337,6 @@ function sendMessage() {
     socket.emit(
         "send_message",
         {
-            username: username,
             message: text
         }
     );
@@ -381,16 +497,20 @@ function addSystemMessage(text) {
     const system =
         document.createElement("div");
 
+
     system.classList.add(
         "system-message"
     );
 
+
     system.textContent =
         text;
+
 
     messages.appendChild(
         system
     );
+
 
     scrollToBottom();
 
@@ -425,6 +545,7 @@ leaveButton.addEventListener(
         sessionStorage.removeItem(
             "username"
         );
+
 
         sessionStorage.removeItem(
             "roomPassword"
