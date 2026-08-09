@@ -263,7 +263,7 @@ def handle_message(data):
 # =========================================================
 
 @socketio.on("typing")
-def handle_typing(data):
+def handle_typing(data=None):
 
     from flask import request
 
@@ -293,7 +293,7 @@ def handle_typing(data):
 # =========================================================
 
 @socketio.on("stop_typing")
-def handle_stop_typing(data):
+def handle_stop_typing(data=None):
 
     from flask import request
 
