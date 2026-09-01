@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#080b14">
+    <title>{{ room_name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="chat-page">
+<div class="chat-shell">
+    <header class="chat-header">
+        <div class="header-left">
+            <div class="room-avatar">💬</div>
+            <div class="room-details">
+                <h1>{{ room_name }}</h1>
+                <div class="room-status"><span class="online-dot"></span><span id="onlineCount">Online</span></div>
+            </div>
+        </div>
+        <button id="leaveButton" class="leave-button" type="button">Leave</button>
+    </header>
+
+    <main id="messages" class="messages" aria-live="polite"></main>
+
+    <div id="typingIndicator" class="typing-indicator"></div>
+
+    <div id="imagePreview" class="image-preview" hidden>
+        <img id="previewImage" alt="Selected image preview">
+        <div class="preview-info"><strong>Image ready</strong><span>Tap Send to share</span></div>
+        <button id="cancelImage" type="button" aria-label="Cancel image">×</button>
+    </div>
+
+    <div class="message-area">
+        <input id="imageInput" type="file" accept="image/jpeg,image/png,image/webp" hidden>
+        <button id="imageButton" class="tool-button" type="button" title="Send image" aria-label="Send image">📷</button>
+        <input type="text" id="messageInput" placeholder="Write a message..." maxlength="2000" autocomplete="off">
+        <button id="sendButton" class="send-button" type="button" aria-label="Send message">➤</button>
+    </div>
+</div>
+
+<script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
