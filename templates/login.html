@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>{{ room_name }}</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+
+<div class="login-page">
+
+
+    <div class="login-card">
+
+
+        <img class="chat-logo" src="https://awoiaf.westeros.org/images/1/1e/House_Targaryen.svg" alt="Chatroom image">
+
+
+        <h1>
+            {{ room_name }}
+        </h1>
+
+
+        <p class="subtitle">
+            Private Chatroom
+        </p>
+
+
+        <!-- USERNAME -->
+
+        <div class="input-group">
+
+            <label for="username">
+                Username
+            </label>
+
+            <input
+                type="text"
+                id="username"
+                placeholder="Enter your name"
+                maxlength="20"
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <!-- ROOM PASSWORD -->
+
+        <div class="input-group">
+
+            <label for="password">
+                Room Password
+            </label>
+
+            <input
+                type="password"
+                id="password"
+                placeholder="Enter room password"
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <!-- JOIN BUTTON -->
+
+        <button
+            id="joinButton"
+            class="join-button"
+        >
+            JOIN CHAT
+        </button>
+
+
+        <!-- ERROR -->
+
+        <div
+            id="errorMessage"
+            class="error-message"
+        ></div>
+
+
+        <!-- CREDITS -->
+
+        <button
+            id="creditsButton"
+            class="credits-button"
+        >
+            Credits
+        </button>
+
+
+    </div>
+
+
+</div>
+
+
+<!-- CREDITS POPUP -->
+
+<div
+    id="creditsModal"
+    class="modal-overlay"
+>
+
+
+    <div class="credits-modal">
+
+
+        <button
+            id="closeCredits"
+            class="close-button"
+        >
+            ×
+        </button>
+
+
+        <div class="credits-icon">
+            ⭐
+        </div>
+
+
+        <h2>
+            Credits
+        </h2>
+
+
+        <p>
+            Created by
+        </p>
+
+
+        <strong>
+            Pavan Shetty
+        </strong>
+
+
+    </div>
+
+
+</div>
+
+
+<script
+    src="https://cdn.socket.io/4.8.1/socket.io.min.js"
+></script>
+
+
+<script>
+
+const socket = io();
+
+
+const usernameInput =
+    document.getElementById("username");
+
+const passwordInput =
+    document.getElementById("password");
+
+const joinButton =
+    document.getElementById("joinButton");
+
+const errorMessage =
+    document.getElementById("errorMessage");
+
+
+// =================================================
+// JOIN
+// =================================================
+
+joinButton.addEventListener(
+    "click",
+    function () {
+
+        const username =
+            usernameInput.value.trim();
+
+        const password =
+            passwordInput.value;
+
+
+        errorMessage.textContent = "";
+
+
+        if (!username) {
+
+            errorMessage.textContent =
+                "Please enter your username.";
+
+            return;
+
+        }
+
+
+        if (!password) {
+
+            errorMessage.textContent =
+                "Please enter the room password.";
+
+            return;
+
+        }
+
+
+        joinButton.disabled = true;
+
+        joinButton.textContent =
+            "JOINING...";
+
+
+        socket.emit(
+            "join_room",
+            {
+                username: username,
+                password: password
+            }
+        );
+
+    }
+);
+
+
+// =================================================
+// JOIN SUCCESS
+// =================================================
+
+socket.on(
+    "join_success",
+    function (data) {
+
+        sessionStorage.setItem(
+            "username",
+            data.username
+        );
+
+        sessionStorage.setItem(
+            "roomPassword",
+            passwordInput.value
+        );
+
+        window.location.href =
+            "/chat";
+
+    }
+);
+
+
+// =================================================
+// JOIN ERROR
+// =================================================
+
+socket.on(
+    "join_error",
+    function (data) {
+
+        errorMessage.textContent =
+            data.message;
+
+
+        joinButton.disabled = false;
+
+        joinButton.textContent =
+            "JOIN CHAT";
+
+    }
+);
+
+
+// =================================================
+// CREDITS
+// =================================================
+
+const creditsButton =
+    document.getElementById("creditsButton");
+
+const creditsModal =
+    document.getElementById("creditsModal");
+
+const closeCredits =
+    document.getElementById("closeCredits");
+
+
+creditsButton.addEventListener(
+    "click",
+    function () {
+
+        creditsModal.classList.add(
+            "show"
+        );
+
+    }
+);
+
+
+closeCredits.addEventListener(
+    "click",
+    function () {
+
+        creditsModal.classList.remove(
+            "show"
+        );
+
+    }
+);
+
+
+creditsModal.addEventListener(
+    "click",
+    function (event) {
+
+        if (
+            event.target ===
+            creditsModal
+        ) {
+
+            creditsModal.classList.remove(
+                "show"
+            );
+
+        }
+
+    }
+);
+
+
+// =================================================
+// ENTER KEY
+// =================================================
+
+passwordInput.addEventListener(
+    "keydown",
+    function (event) {
+
+        if (event.key === "Enter") {
+
+            joinButton.click();
+
+        }
+
+    }
+);
+
+</script>
+
+
+</body>
+
+</html>

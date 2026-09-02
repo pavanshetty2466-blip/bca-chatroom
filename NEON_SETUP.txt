@@ -1,0 +1,21 @@
+BCA 1st Batch Chatroom - Free Database Setup
+
+This version works with any PostgreSQL database through DATABASE_URL, including Neon's Free plan.
+
+1. Create a free PostgreSQL project at Neon.
+2. Copy Neon's PostgreSQL connection string. Keep it private.
+3. In Render -> bca-chatroom -> Environment, set DATABASE_URL to that Neon connection string.
+4. Do NOT copy the old Render DATABASE_URL.
+5. Deploy/redeploy the web service. The new database starts with no old messages.
+
+Optional: clear the old database
+If you want to erase all messages from the old Render database before leaving it:
+- Temporarily add CLEAR_MESSAGES_ON_STARTUP=true in Render Environment.
+- Deploy once.
+- After the deployment succeeds, REMOVE CLEAR_MESSAGES_ON_STARTUP.
+- Do not leave this variable enabled, because every restart would clear the chat history.
+
+Top image
+The chatroom now uses the House Targaryen three-headed dragon sigil at the top of the login page and chat header.
+The logo source is the House Targaryen SVG from A Wiki of Ice and Fire, licensed CC BY-SA 3.0.
+Source: https://awoiaf.westeros.org/index.php/File:House_Targaryen.svg
